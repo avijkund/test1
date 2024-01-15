@@ -9,11 +9,30 @@ pr:
 - master
 pool:
   vmImage: ubuntu-latest
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+  - stage: TerraformPlan
+    jobs:
+      - job: TerraformPlan
+        condition: eq(variables['Build.Reason'], 'PullRequest')
+        steps:
+        - task: Bash@3
+          inputs:
+            targetType: 'inline'
+            script: |
+              # Write your commands here
+              
+              echo 'Running for Pull Request'
+  
+  - stage: TerraformApply
+    jobs:
+      - job: TerraformApply
+        condition: eq(variables['Build.Reason'], 'PullRequestMerge')
+        steps:
+        - task: Bash@3
+          inputs:
+            targetType: 'inline'
+            script: |
+              # Write your commands here
+              
+              echo 'Running for Pull Request Merge'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
